@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+       <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const Form = ({ onFormSubmit }) => {
+        const [name, setName] = React.useState('');
+        const [marks, setMarks] = React.useState('');
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          if (name.trim() === '' || marks.trim() === '') {
+            return;
+          }
+          onFormSubmit({ name, marks });
+          setName('');
+          setMarks('');
+        };
+
+        return (
+          <>
+            <h1>Students'form</h1>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Marks"
+                value={marks}
+                onChange={(e) => setMarks(e.target.value)}
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </>
+        );
+      };
+
+      const Result = ({ students }) => {
+        return (
+          <>
+            <p>
+            <table border="1px">
+              <thead>
+                <tr>
+                  <th>Student's name</th>
+                  <th>Marks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <tr key={index}>
+                    <td>{student.name}</td>
+                    <td>{student.marks}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            </p>
+          </>
+        );
+      };
+
+      const rootElement = ReactDOM.createRoot(document.getElementById('root'));
+
+      // Define the initial students array
+      const initialStudents = [];
+
+      const App = () => {
+        const [students, setStudents] = React.useState(initialStudents);
+
+        const handleFormSubmit = (data) => {
+          setStudents([...students, data]);
+        };
+
+        return (
+          <>
+            <Form onFormSubmit={handleFormSubmit} />
+            <Result students={students} />
+          </>
+        );
+      };
+
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>

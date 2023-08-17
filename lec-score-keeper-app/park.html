@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      const App = () => {
+        const [carCount, setCarCount] = useState(0);
+        const [bikeCount, setBikeCount] = useState(0);
+        const [scootyCount, setScootyCount] = useState(0);
+        const [bicycleCount, setBicycleCount] = useState(0);
+
+        const handleDecrease = (countState, setCountState) => {
+          if (countState > 0) {
+            setCountState(countState - 1);
+          }
+        };
+
+        return (
+          <>
+            <p>List of all the vehicles count in the parking.</p>
+            <ol>
+              <li>
+                <p>
+                  <b>Car: {carCount}</b> &emsp;
+                  <button onClick={() => setCarCount(carCount + 1)}>Increase</button>
+                  &emsp;
+                  <button onClick={() => handleDecrease(carCount, setCarCount)}>Decrease</button>
+                </p>
+              </li>
+              <li>
+                <p>
+                  <b>Bike: {bikeCount}</b> &emsp;
+                  <button onClick={() => setBikeCount(bikeCount + 1)}>Increase</button>
+                  &emsp;
+                  <button onClick={() => handleDecrease(bikeCount, setBikeCount)}>Decrease</button>
+                </p>
+              </li>
+              <li>
+                <p>
+                  <b>Scooty: {scootyCount}</b> &emsp;
+                  <button onClick={() => setScootyCount(scootyCount + 1)}>Increase</button>
+                  &emsp;
+                  <button onClick={() => handleDecrease(scootyCount, setScootyCount)}>Decrease</button>
+                </p>
+              </li>
+              <li>
+                <p>
+                  <b>Bicycle: {bicycleCount}</b> &emsp;
+                  <button onClick={() => setBicycleCount(bicycleCount + 1)}>Increase</button>
+                  &emsp;
+                  <button onClick={() => handleDecrease(bicycleCount, setBicycleCount)}>Decrease</button>
+                </p>
+              </li>
+            </ol>
+          </>
+        );
+      };
+
+      const rootElement = document.getElementById("root");
+      ReactDOM.render(<App />, rootElement);
+    </script>
+  </body>
+</html>

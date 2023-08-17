@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      let customers = [];
+      const capacity = 25;
+      let seatsLeft = 25;
+
+      const handleFormSubmit = (e) => {
+        e.preventDefault();
+
+        const guestCount = parseInt(e.target.guestCount.value);
+        const name = e.target.name.value;
+        const phoneNumber = e.target.phoneNumber.value;
+
+        if (guestCount > seatsLeft) {
+          alert("Guest count exceeds capacity");
+          return;
+        }
+
+        if (customers.some((customer) => customer.name === name)) {
+          alert("Customer already exists");
+          return;
+        }
+
+        seatsLeft -= guestCount;
+
+        customers.unshift({
+          guestCount,
+          name,
+          phoneNumber,
+          checkedOut: false,
+        });
+
+        rootElement.render(<App />);
+        e.target.reset();
+      };
+
+      const handleCheckout = (index) => {
+        customers[index].checkedOut = true;
+        customers[index].checkoutTime = new Date().toLocaleTimeString();
+        seatsLeft += customers[index].guestCount;
+        rootElement.render(<App />);
+      };
+
+      const handleDelete = (index) => {
+        const customer = customers[index];
+        if (!customer.checkedOut) {
+          seatsLeft += customer.guestCount;
+        }
+        customers.splice(index, 1);
+        rootElement.render(<App />);
+      };
+
+      const App = () => (
+        <div className="App" style={{ textAlign: "center" }}>
+          <div>
+            <h2>Total Capacity: {capacity}</h2>
+            <h2>Seats Left: {seatsLeft}</h2>
+          </div>
+
+          <form onSubmit={handleFormSubmit}>
+            
+            <input type="number" name="guestCount" required placeholder="Guest Count" />
+            <br />
+            
+            <input type="text" name="name" required placeholder="Primary Guest Name"/>
+            <br />
+            
+            <input type="tel" name="phoneNumber" required placeholder="Phone Number" />
+            <br />
+            <button type="submit">Add Entry</button>
+          </form>
+
+          <table border="1px" style={{ margin: "auto" }}>
+            <thead>
+              <tr>
+                <th> Count</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Remove Entry</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map((customer, index) => (
+                <tr key={index}>
+                  <td>{customer.guestCount}</td>
+                  <td>{customer.name}</td>
+                  <td>{customer.phoneNumber}</td>
+                  <td>
+                    {!customer.checkedOut ? (
+                      <button onClick={() => handleCheckout(index)}>
+                        Click to Checkout
+                      </button>
+                    ) : (
+                      "Checked Out"
+                    )}
+                  </td>
+                  <td>
+                    {!customer.checkedOut ? (
+                      <button onClick={() => handleCheckout(index)}>
+                        Click to Checkout
+                      </button>
+                    ) : (
+                      "Checked Out"
+                    )}
+                  </td>
+                  <td>{customer.checkoutTime}</td>
+                  <td>
+                    <button onClick={() => handleDelete(index)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>
